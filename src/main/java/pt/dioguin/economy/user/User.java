@@ -1,6 +1,9 @@
 package pt.dioguin.economy.user;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import pt.dioguin.economy.EconomyPlugin;
+import pt.dioguin.economy.utils.Formatter;
 
 import java.util.UUID;
 
@@ -15,12 +18,22 @@ public class User {
         EconomyPlugin.getUserManager().getUsers().add(this);
     }
 
+    public User(UUID uniqueId, double amount){
+        this.uniqueId = uniqueId;
+        this.amount = amount;
+        EconomyPlugin.getUserManager().getUsers().add(this);
+    }
+
     public UUID getUniqueId() {
         return uniqueId;
     }
 
     public double getAmount() {
         return amount;
+    }
+
+    public String getFormattedAmount(){
+        return new Formatter().formatNumber(this.amount);
     }
 
     public void setAmount(double amount) {
@@ -33,5 +46,9 @@ public class User {
 
     public void addAmount(double amount){
         this.amount += amount;
+    }
+
+    public Player getPlayer(){
+        return Bukkit.getPlayer(this.uniqueId);
     }
 }
