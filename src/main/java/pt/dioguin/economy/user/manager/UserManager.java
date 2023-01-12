@@ -2,6 +2,7 @@ package pt.dioguin.economy.user.manager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import pt.dioguin.economy.EconomyPlugin;
 import pt.dioguin.economy.user.User;
 
@@ -18,6 +19,7 @@ public class UserManager {
 
     public UserManager(){
         this.users = new ArrayList<>();
+        saveAsync();
     }
 
     public User getUser(Player player){
@@ -36,6 +38,21 @@ public class UserManager {
 
         while (result.next())
             new User(UUID.fromString(result.getString("UNIQUEID")), result.getDouble("AMOUNT"));
+
+    }
+
+    public void saveAsync(){
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                try {
+                    saveAll();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }.runTaskTimer(EconomyPlugin.getInstance(), 20 * 60 * 30, 20 * 60 * 30);
 
     }
 
