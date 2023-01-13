@@ -10,16 +10,19 @@ import java.util.UUID;
 public class User {
 
     private final UUID uniqueId;
+    private final String name;
     private double amount;
 
-    public User(UUID uniqueId){
+    public User(UUID uniqueId, String name){
         this.uniqueId = uniqueId;
+        this.name = name;
         this.amount = 0;
         EconomyPlugin.getUserManager().getUsers().add(this);
     }
 
-    public User(UUID uniqueId, double amount){
+    public User(UUID uniqueId, String name, double amount){
         this.uniqueId = uniqueId;
+        this.name = name;
         this.amount = amount;
         EconomyPlugin.getUserManager().getUsers().add(this);
     }
@@ -50,5 +53,9 @@ public class User {
 
     public Player getPlayer(){
         return Bukkit.getPlayer(this.uniqueId);
+    }
+
+    public String getName() {
+        return name;
     }
 }

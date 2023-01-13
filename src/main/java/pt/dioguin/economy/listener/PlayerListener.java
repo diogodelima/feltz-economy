@@ -16,7 +16,7 @@ public class PlayerListener implements Listener {
         User user = EconomyPlugin.getUserManager().getUser(player);
 
         if (user == null)
-            new User(player.getUniqueId());
+            new User(player.getUniqueId(), player.getName());
 
     }
 

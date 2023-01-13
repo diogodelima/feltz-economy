@@ -54,7 +54,7 @@ public class Connector {
     public void createTable(String name){
 
         try {
-            PreparedStatement statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS " + name + " (UNIQUEID VARCHAR(255), AMOUNT DOUBLE)");
+            PreparedStatement statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS " + name + " (UNIQUEID VARCHAR(255), NAME VARCHAR(255), AMOUNT DOUBLE)");
             statement.executeUpdate();
             statement.close();
         }catch (SQLException e){

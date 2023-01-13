@@ -9,39 +9,16 @@ import pt.dioguin.economy.user.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class UserManager {
 
     private final List<User> users;
+    private HashMap<String, Double> top;
 
     public UserManager(){
         this.users = new ArrayList<>();
-        saveAsync();
-    }
-
-    public User getUser(Player player){
-
-        for (User user : this.users)
-            if (user.getUniqueId().equals(player.getUniqueId()))
-                return user;
-
-        return null;
-    }
-
-    public void load() throws SQLException {
-
-        PreparedStatement statement = EconomyPlugin.getConnector().getConnection().prepareStatement("SELECT * FROM feltzeconomy");
-        ResultSet result = statement.executeQuery();
-
-        while (result.next())
-            new User(UUID.fromString(result.getString("UNIQUEID")), result.getDouble("AMOUNT"));
-
-    }
-
-    public void saveAsync(){
+        this.top = new LinkedHashMap<>();
 
         new BukkitRunnable() {
             @Override
@@ -53,6 +30,54 @@ public class UserManager {
                 }
             }
         }.runTaskTimer(EconomyPlugin.getInstance(), 20 * 60 * 30, 20 * 60 * 30);
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+               reloadTop();
+            }
+        }.runTaskTimer(EconomyPlugin.getInstance(), 0, 20 * 60 * 5);
+
+    }
+
+    public void reloadTop(){
+
+        HashMap<String, Double> map = new HashMap<>();
+        for (User user : this.users)
+            map.put(user.getName(), user.getAmount());
+
+        top.clear();
+        map.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .forEachOrdered(x -> top.put(x.getKey(), x.getValue()));
+    }
+
+    public User getUser(Player player){
+
+        for (User user : this.users)
+            if (user.getUniqueId().equals(player.getUniqueId()))
+                return user;
+
+        return null;
+    }
+
+    public User getUser(String name){
+
+        for (User user : this.users)
+            if (user.getName().equals(name))
+                return user;
+
+        return null;
+    }
+
+    public void load() throws SQLException {
+
+        PreparedStatement statement = EconomyPlugin.getConnector().getConnection().prepareStatement("SELECT * FROM feltzeconomy");
+        ResultSet result = statement.executeQuery();
+
+        while (result.next())
+            new User(UUID.fromString(result.getString("UNIQUEID")), result.getString("NAME"), result.getDouble("AMOUNT"));
 
     }
 
@@ -75,9 +100,10 @@ public class UserManager {
             statement.setDouble(1, user.getAmount());
             statement.setString(2, user.getUniqueId().toString());
         }else{
-            statement = EconomyPlugin.getConnector().getConnection().prepareStatement("INSERT INTO feltzeconomy (UNIQUEID,AMOUNT) VALUES(?,?)");
+            statement = EconomyPlugin.getConnector().getConnection().prepareStatement("INSERT INTO feltzeconomy (UNIQUEID,AMOUNT,NAME) VALUES(?,?,?)");
             statement.setString(1, user.getUniqueId().toString());
             statement.setDouble(2, user.getAmount());
+            statement.setString(3, user.getName());
         }
 
         statement.execute();
@@ -89,5 +115,9 @@ public class UserManager {
 
     public List<User> getUsers() {
         return users;
+    }
+
+    public HashMap<String, Double> getTop() {
+        return top;
     }
 }

@@ -1,6 +1,10 @@
 package pt.dioguin.economy;
 
+import net.luckperms.api.LuckPerms;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import pt.dioguin.economy.commands.MoneyCommand;
 import pt.dioguin.economy.database.Connector;
 import pt.dioguin.economy.hook.VaultHook;
 import pt.dioguin.economy.impl.EconomyImpl;
@@ -14,6 +18,8 @@ public final class EconomyPlugin extends JavaPlugin {
     private static EconomyImpl economy;
     private static Connector connector;
     private VaultHook vaultHook;
+    private LuckPerms luckPermsAPI;
+
     @Override
     public void onEnable() {
         connector = new Connector("localhost", "test", "root", "", 3306);
@@ -23,11 +29,18 @@ public final class EconomyPlugin extends JavaPlugin {
         economy = new EconomyImpl();
         vaultHook = new VaultHook();
         vaultHook.hook();
+
+        RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
+        if (provider != null)
+            luckPermsAPI = provider.getProvider();
+
         try {
             userManager.load();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+        getCommand("money").setExecutor(new MoneyCommand());
     }
 
     @Override
@@ -54,5 +67,9 @@ public final class EconomyPlugin extends JavaPlugin {
 
     public static Connector getConnector() {
         return connector;
+    }
+
+    public LuckPerms getLuckPermsAPI() {
+        return luckPermsAPI;
     }
 }
