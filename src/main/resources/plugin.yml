@@ -1,0 +1,8 @@
+name: feltz-economy
+version: '${project.version}'
+main: pt.dioguin.economy.EconomyPlugin
+authors: [ yDioguin_ ]
+website: https://diogolima.tk
+commands:
+  money:
+    aliases: [coin, coins, dinheiro]
