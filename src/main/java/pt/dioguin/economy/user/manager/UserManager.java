@@ -79,6 +79,7 @@ public class UserManager {
         while (result.next())
             new User(UUID.fromString(result.getString("UNIQUEID")), result.getString("NAME"), result.getDouble("AMOUNT"));
 
+        Bukkit.getConsoleSender().sendMessage("§aForam carregados §f" + this.users.size() + " §ausuários com sucesso.");
     }
 
     public void saveAll() throws SQLException {

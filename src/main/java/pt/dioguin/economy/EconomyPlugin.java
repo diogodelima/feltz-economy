@@ -8,6 +8,7 @@ import pt.dioguin.economy.commands.MoneyCommand;
 import pt.dioguin.economy.database.Connector;
 import pt.dioguin.economy.hook.VaultHook;
 import pt.dioguin.economy.impl.EconomyImpl;
+import pt.dioguin.economy.placeholder.EconomyExpansion;
 import pt.dioguin.economy.user.manager.UserManager;
 
 import java.sql.SQLException;
@@ -39,6 +40,9 @@ public final class EconomyPlugin extends JavaPlugin {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+        if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
+            new EconomyExpansion().register();
 
         getCommand("money").setExecutor(new MoneyCommand());
     }
