@@ -79,7 +79,7 @@ public class UserManager {
         while (result.next())
             new User(UUID.fromString(result.getString("UNIQUEID")), result.getString("NAME"), result.getDouble("AMOUNT"));
 
-        Bukkit.getConsoleSender().sendMessage(this.users.size() + " §ausers were loaded successfully.");
+        Bukkit.getConsoleSender().sendMessage("§a[feltz-economy] §f" + this.users.size() + " §ausers were loaded successfully.");
     }
 
     public void saveAll() throws SQLException {
