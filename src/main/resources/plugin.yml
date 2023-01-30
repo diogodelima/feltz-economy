@@ -5,4 +5,4 @@ authors: [ yDioguin_ ]
 website: https://diogolima.tk
 commands:
   money:
-    aliases: [coin, coins, dinheiro]
+    aliases: [coin, coins, balance]

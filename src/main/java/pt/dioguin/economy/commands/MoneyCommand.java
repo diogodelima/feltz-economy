@@ -18,7 +18,7 @@ public class MoneyCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
         if (!(sender instanceof Player)){
-            sender.sendMessage("§cApenas jogadores podem executar este comando.");
+            sender.sendMessage("§cOnly players can execute this command.");
             return true;
         }
 
@@ -29,30 +29,30 @@ public class MoneyCommand implements CommandExecutor {
             user = new User(player.getUniqueId(), player.getName());
 
         if (args.length == 0){
-            player.sendMessage("§aVocê possui §f" + user.getFormattedAmount() + " §acoin(s).");
+            player.sendMessage("§aYou have §f" + user.getFormattedAmount() + " §acoin(s).");
             return true;
         }
 
         if (args[0].equalsIgnoreCase("pay") || args[0].equalsIgnoreCase("enviar")){
             //money pay <nickname> <quantity>
             if (args.length != 3){
-                player.sendMessage("§cERRO! Digite /money enviar <jogador> <quantia>");
+                player.sendMessage("§cERROR! Digite /money enviar <player> <amount>");
                 return true;
             }
 
             if (args[2].equalsIgnoreCase("nan")){
-                player.sendMessage("§cERRO! Digite uma quantia válida.");
+                player.sendMessage("§cERROR! Enter a valid amount.");
                 return true;
             }
 
             if (args[1].equalsIgnoreCase(player.getName())){
-                player.sendMessage("§cERRO! Você não pode enviar dinheiro para si mesmo.");
+                player.sendMessage("§cERROR! You cannot send money to yourself.");
                 return true;
             }
 
             User targetUser = EconomyPlugin.getUserManager().getUser(args[1]);
             if (targetUser == null || targetUser.getPlayer() == null){
-                player.sendMessage("§cEste usuário não está online.");
+                player.sendMessage("§cThis user is not yet online.");
                 return true;
             }
 
@@ -61,20 +61,20 @@ public class MoneyCommand implements CommandExecutor {
             try{
                 amount = Double.parseDouble(args[2]);
             }catch (Exception e){
-                player.sendMessage("§cERRO! Digite uma quantia válida.");
+                player.sendMessage("§cERROR! Enter a valid amount.");
                 return true;
             }
 
             if (!EconomyPlugin.getEconomy().has(player.getName(), amount)){
-                player.sendMessage("§cERRO! Você não possui dinheiro o suficiente para efetuar esta transação.");
+                player.sendMessage("§cERROR! You don't have enough money to make this transaction.");
                 return true;
             }
 
             String formatted = new Formatter().formatNumber(amount);
             EconomyPlugin.getEconomy().depositPlayer(targetUser.getName(), amount);
             EconomyPlugin.getEconomy().withdrawPlayer(player.getName(), amount);
-            player.sendMessage("§aVocê enviou §f" + formatted + " §acoin(s) para o jogador §f" + targetUser.getName() + " §acom sucesso!");
-            targetUser.getPlayer().sendMessage("§aVocê recebeu §f" + formatted + " §acoin(s) do jogador §f" + player.getName() + " §acom sucesso!");
+            player.sendMessage("§aYou have sent §f" + formatted + " §acoin(s) to the player §f" + targetUser.getName() + " §asuccessfully!");
+            targetUser.getPlayer().sendMessage("§aYou have successfully received §f" + formatted + " §acoin(s) from the player §f" + player.getName() + "§a.");
             Bukkit.getPluginManager().callEvent(new MoneySendEvent(player, targetUser.getPlayer(), amount));
             return true;
         }
@@ -86,8 +86,8 @@ public class MoneyCommand implements CommandExecutor {
             String prefix = userLP.getCachedData().getMetaData().getPrefix().replace("&", "§");
 
             player.sendMessage("");
-            player.sendMessage("   §eJogadores mais ricos do servidor");
-            player.sendMessage("         §7Atualiza a cada 5 minutos.");
+            player.sendMessage("   §eRichest players on the server");
+            player.sendMessage("         §7Updates every 5 minutes.");
             player.sendMessage("");
 
             for (Map.Entry<String, Double> item : EconomyPlugin.getUserManager().getTop().entrySet()) {
@@ -104,7 +104,7 @@ public class MoneyCommand implements CommandExecutor {
             if (args[0].equalsIgnoreCase("add")){
 
                 if (args.length != 3) {
-                    player.sendMessage("§cDigite '/money add <jogador> <quantia>'");
+                    player.sendMessage("§cTry typing '/money add <player> <amount>'");
                     return true;
                 }
 
@@ -112,26 +112,26 @@ public class MoneyCommand implements CommandExecutor {
                 double amount;
 
                 if (target == null){
-                    player.sendMessage("§cEste usuário não possui uma conta no servidor.");
+                    player.sendMessage("§cThis user does not have an account on the server.");
                     return true;
                 }
 
                 try{
                     amount = Double.parseDouble(args[2]);
                 }catch (Exception e){
-                    player.sendMessage("§cERRO! Digite uma quantia válida.");
+                    player.sendMessage("§cERROR! Enter a valid amount.");
                     return true;
                 }
 
                 EconomyPlugin.getEconomy().depositPlayer(args[1], amount);
-                player.sendMessage("§aVocê adicionou §f" + new Formatter().formatNumber(amount) + " §acoin(s) ao jogador §f" + args[1] + " §acom sucesso.");
+                player.sendMessage("§aYou have successfully added §f" + new Formatter().formatNumber(amount) + " §acoin(s) for the player §f" + args[1] + "§a.");
                 return true;
             }
 
             if (args[0].equalsIgnoreCase("remove")){
 
                 if (args.length != 3) {
-                    player.sendMessage("§cDigite '/money remove <jogador> <quantia>'");
+                    player.sendMessage("§cTry typing '/money remove <player> <amount>'");
                     return true;
                 }
 
@@ -139,26 +139,26 @@ public class MoneyCommand implements CommandExecutor {
                 double amount;
 
                 if (target == null){
-                    player.sendMessage("§cEste usuário não possui uma conta no servidor.");
+                    player.sendMessage("§cThis user does not have an account on the server.");
                     return true;
                 }
 
                 try{
                     amount = Double.parseDouble(args[2]);
                 }catch (Exception e){
-                    player.sendMessage("§cERRO! Digite uma quantia válida.");
+                    player.sendMessage("§cERROR! Enter a valid amount.");
                     return true;
                 }
 
                 EconomyPlugin.getEconomy().withdrawPlayer(args[1], amount);
-                player.sendMessage("§aVocê adicionou §f" + new Formatter().formatNumber(amount) + " §acoin(s) ao jogador §f" + args[1] + " §acom sucesso.");
+                player.sendMessage("§aYou have successfully removed §f" + new Formatter().formatNumber(amount) + " §acoin(s) from the player §f" + args[1] + "§a.");
                 return true;
             }
 
             if (args[0].equalsIgnoreCase("set")){
 
                 if (args.length != 3) {
-                    player.sendMessage("§cDigite '/money set <jogador> <quantia>'");
+                    player.sendMessage("§cTry typing '/money set <player> <amonut>'");
                     return true;
                 }
 
@@ -166,20 +166,20 @@ public class MoneyCommand implements CommandExecutor {
                 double amount;
 
                 if (target == null){
-                    player.sendMessage("§cEste usuário não possui uma conta no servidor.");
+                    player.sendMessage("§cThis user does not have an account on the server.");
                     return true;
                 }
 
                 try{
                     amount = Double.parseDouble(args[2]);
                 }catch (Exception e){
-                    player.sendMessage("§cERRO! Digite uma quantia válida.");
+                    player.sendMessage("§cERROR! Enter a valid amount.");
                     return true;
                 }
 
                 EconomyPlugin.getEconomy().withdrawPlayer(args[1], EconomyPlugin.getEconomy().getBalance(args[1]));
                 EconomyPlugin.getEconomy().depositPlayer(args[1], amount);
-                player.sendMessage("§aVocê definiu §f" + new Formatter().formatNumber(amount) + " §acoin(s) ao jogador §f" + args[1] + " §acom sucesso.");
+                player.sendMessage("§aYou have successfully set §f" + new Formatter().formatNumber(amount) + " §acoin(s) for the player §f" + args[1] + "§a.");
                 return true;
             }
 
@@ -189,19 +189,19 @@ public class MoneyCommand implements CommandExecutor {
 
             User targetUser = EconomyPlugin.getUserManager().getUser(args[0]);
             if (targetUser == null){
-                player.sendMessage("§cEste usuário não possui uma conta em nosso servidor.");
+                player.sendMessage("§cThis user does not have an account on the server.");
                 return true;
             }
 
-            player.sendMessage("§aO usuário §f" + targetUser.getName() + " §apossui §f" + targetUser.getFormattedAmount() + " §acoin(s).");
+            player.sendMessage("§aPlayer §f" + targetUser.getName() + " §ahas §f" + targetUser.getFormattedAmount() + " §acoin(s).");
             return true;
         }
 
-        player.sendMessage("§e§lAJUDA");
+        player.sendMessage("§e§lHELP");
         player.sendMessage("");
-        player.sendMessage("§e/money §7- veja o saldo da sua conta");
-        player.sendMessage("§e/money <jogador> §7- veja o saldo da conta de outro jogador");
-        player.sendMessage("§e/money enviar <jogador> <quantia> §7- envie dinheiro para a conta de um jogador");
+        player.sendMessage("§e/money §7- Check your account balance");
+        player.sendMessage("§e/money <player> §7- Check the balance of another player's account");
+        player.sendMessage("§e/money pay <player> <amount> §7- Send money to a player's account");
         player.sendMessage("");
         return false;
     }

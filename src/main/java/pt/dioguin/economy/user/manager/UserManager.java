@@ -79,7 +79,7 @@ public class UserManager {
         while (result.next())
             new User(UUID.fromString(result.getString("UNIQUEID")), result.getString("NAME"), result.getDouble("AMOUNT"));
 
-        Bukkit.getConsoleSender().sendMessage("§aForam carregados §f" + this.users.size() + " §ausuários com sucesso.");
+        Bukkit.getConsoleSender().sendMessage(this.users.size() + " §ausers were loaded successfully.");
     }
 
     public void saveAll() throws SQLException {
@@ -87,7 +87,7 @@ public class UserManager {
         for (User user : this.users)
             save(user, false);
 
-        Bukkit.getConsoleSender().sendMessage("§a[feltz-economy] Foram salvos §f" + this.users.size() + " §acom sucesso.");
+        Bukkit.getConsoleSender().sendMessage("§a[feltz-economy] §f" + this.users.size() + " §ausers were loaded successfully.");
     }
 
     public void save(User user, boolean debug) throws SQLException {
@@ -111,7 +111,7 @@ public class UserManager {
         statement.close();
 
         if (debug)
-            Bukkit.getConsoleSender().sendMessage("§a[feltz-economy] O usuário §f" + user.getPlayer().getName() + " §acom sucesso.");
+            Bukkit.getConsoleSender().sendMessage("§a[feltz-economy] User §f" + user.getPlayer().getName() + " §ahas been successfully saved.");
     }
 
     public List<User> getUsers() {
