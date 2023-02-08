@@ -23,7 +23,7 @@ public final class EconomyPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        connector = new Connector("localhost", "test", "root", "", 3306);
+        connector = new Connector("localhost", "feltz", "root", "benficamerda123", 3306);
         connector.connect();
         connector.createTable("feltzeconomy");
         userManager = new UserManager();
