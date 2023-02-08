@@ -8,6 +8,7 @@ import pt.dioguin.economy.commands.MoneyCommand;
 import pt.dioguin.economy.database.Connector;
 import pt.dioguin.economy.hook.VaultHook;
 import pt.dioguin.economy.impl.EconomyImpl;
+import pt.dioguin.economy.listener.PlayerListener;
 import pt.dioguin.economy.placeholder.EconomyExpansion;
 import pt.dioguin.economy.user.manager.UserManager;
 
@@ -45,6 +46,7 @@ public final class EconomyPlugin extends JavaPlugin {
             new EconomyExpansion().register();
 
         getCommand("money").setExecutor(new MoneyCommand());
+        Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
     }
 
     @Override
